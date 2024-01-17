@@ -10,19 +10,20 @@ initial_state = 0.0 # . . . Initial state of the model
 w1 = -1.2 # . . . . . . . . Weight for Zt_1
 w2 = +0.8 # . . . . . . . . Weight for Zt_2
 w3 = +0.0 # . . . . . . . . Weight for Zt_3
-compute_function = True # . If compute the function or write the realizations on your own
-# . . . . . . . . . . . . . Write realizations manually here 
+compute_function = True # . If to compute the function or write the realizations on your own
+save_picture = True # . . . If you want to save the pictures for the plot
+# . . . . . . . . . . . . . Write realizations manually here (not a smart idea)
 realizations = [53, 43, 66, 48, 52, 42, 44, 56, 44, 58, 41, 54, 51, 56, 38, 56, 49, 52, 32, 52, 59, 34, 57, 39, 60, 40, 52, 44, 65, 43] 
 
-plot_index = 2 #. . 0 = plot realizations
-# . . . . . . . . . 1 = plot ACF
-# . . . . . . . . . 2 = plot PACF
-save_picture = True
+plot_index = 2 #. . 0 = plot the realizations
+# . . . . . . . . . 1 = plot the ACF up to k
+# . . . . . . . . . 2 = plot the PACF up to k
 
 
 def model(w1=0.0, w2=0.0, w3=0.0):
     '''
     The model that will generate the time series.
+    Supports up to three parameters.
     '''
     # load past variables state
     global Zt
