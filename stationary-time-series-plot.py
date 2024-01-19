@@ -1,23 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt 
+from statsmodels.tsa.stattools import acf
+from statsmodels.tsa.stattools import acovf
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 
 
-N = 50  # . . . . . . . . . Number of samples
-k = 0 # . . . . . . . . . . ACF and PACF horizon, if 0 it will be the maximum amount
+N = 100  # . . . . . . . . . Number of samples
+k = 2   # . . . . . . . . . Lag for the printed results
+lag = 0 # . . . . . . . . . ACF and PACF horizon, if 0 it will be the maximum amount
 initial_state = 0.0 # . . . Initial state of the model
-w1 = -1.2 # . . . . . . . . Weight for Zt_1
-w2 = +0.8 # . . . . . . . . Weight for Zt_2
+w1 = +0.5 # . . . . . . . . Weight for Zt_1
+w2 = +0.0 # . . . . . . . . Weight for Zt_2
 w3 = +0.0 # . . . . . . . . Weight for Zt_3
-compute_function = True # . If to compute the function or write the realizations on your own
-save_picture = True # . . . If you want to save the pictures for the plot
+show_plot = False #. . . . . If to show the plot
+save_picture = False # . . . If you want to save the pictures for the plot
 # . . . . . . . . . . . . . Write realizations manually here (not a smart idea)
-realizations = [53, 43, 66, 48, 52, 42, 44, 56, 44, 58, 41, 54, 51, 56, 38, 56, 49, 52, 32, 52, 59, 34, 57, 39, 60, 40, 52, 44, 65, 43] 
-
-plot_index = 2 #. . 0 = plot the realizations
-# . . . . . . . . . 1 = plot the ACF up to k
-# . . . . . . . . . 2 = plot the PACF up to k
+realizations = [] 
+plot_index = 0 #. . 0 = plot the realizations
+# . . . . . . . . . 1 = plot the ACF up to lag
+# . . . . . . . . . 2 = plot the PACF up to lag
 
 
 def model(w1=0.0, w2=0.0, w3=0.0):
@@ -60,15 +62,19 @@ Zt_1 = initial_state
 Zt_2 = initial_state
 Zt_3 = initial_state
 
-if k <= 0:
-    k = N-1 if plot_index == 1 else (N/2)-1
-if compute_function:
+if lag <= 0:
+    lag = N-1 if plot_index == 1 else (N/2)-1
+if len(realizations) == 0:
     run_simulation(N, w1, w2, w3)
+else:
+    lag = int(len(realizations)/2 -1)
 realizations = np.array(realizations)
 mu = np.mean(realizations)
 std = np.std(realizations)
 variance = np.var(realizations)
-print("Mean: {mean}\nDeviation: {std}\nVariance: {var}".format(mean=mu, std=std, var=variance))
+autocorrelation = acf(realizations)[k]
+autocovariance = acovf(realizations)[k]
+print("Mean:___________________{mean}\nDeviation:______________{std}\nVariance:_______________{var}\nAutocovariance:_________{autocov}\nAutocorrelation (ACF):__{acf}".format(mean=mu, std=std, var=variance, autocov=autocovariance, acf=autocorrelation))
 
 # plotting the points
 assert(plot_index >= 0 and plot_index <= 2)
@@ -76,9 +82,9 @@ plots = ["time-series", "ACF", "PACF" ]
 plot_type = plots[plot_index]
 
 if plot_type == "ACF":
-    plot_acf(realizations, lags=k)
+    plot_acf(realizations, lags=lag)
 elif plot_type == "PACF":
-    plot_pacf(realizations, lags=k)
+    plot_pacf(realizations, lags=lag)
 elif plot_type == "time-series":
     plt.plot(realizations)
     plt.axhline(y=mu, linestyle='dotted')
@@ -93,5 +99,5 @@ plt.title(plot_type + " plot")
 # function to show the plot 
 if save_picture:
     plt.savefig("{title}-plot.png".format(title=plot_type))
-
-plt.show()
+if show_plot:
+    plt.show()
