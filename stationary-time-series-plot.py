@@ -1,3 +1,7 @@
+'''
+Simulate and reason over a simple random process.
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt 
 from statsmodels.tsa.stattools import acf
@@ -8,14 +12,14 @@ from statsmodels.graphics.tsaplots import plot_pacf
 
 #  if empty it will simulate the model expressed in the parameters below
 realizations = [] # <== copy the realizations here
+k = -1   # . . . . . . . . . Lag for the ATF and PACF functions
 
-k = 2   # . . . . . . . . . Lag for the printed results
 N = 100 # . . . . . . . . . Number of simulated samples
-lag = 0 # . . . . . . . . . ACF and PACF horizon, if 0 it will be the maximum amount
 initial_state = 0.0 # . . . Initial state of the model
 w1 = +0.5 # . . . . . . . . Weight for Zt_1
 w2 = +0.0 # . . . . . . . . Weight for Zt_2
 w3 = +0.0 # . . . . . . . . Weight for Zt_3
+
 show_plot = False # . . . . If to display the plot
 save_picture = False #. . . If you want to save the pictures for the plot
 plot_index = 0 #. . 0 = plot the realizations
@@ -63,17 +67,26 @@ Zt_1 = initial_state
 Zt_2 = initial_state
 Zt_3 = initial_state
 
-if lag <= 0:
-    lag = N-1 if plot_index == 1 else (N/2)-1
+if len(realizations) > 0:
+    N = len(realizations)
+
+if k < 0 and plot_index != 0:
+    k = N-1 if plot_index == 1 else int((N/2)-1)
+elif plot_index == 1 and k >= N:
+    k = N-1
+elif plot_index == 2 and k >= (N/2):
+    k = int((N/2)-1)
+elif k < 0 and plot_index == 0:
+    k = 0
+
 if len(realizations) == 0:
     run_simulation(N, w1, w2, w3)
-else:
-    lag = int(len(realizations)/2 -1)
+
 realizations = np.array(realizations)
 mu = np.mean(realizations)
 std = np.std(realizations)
 variance = np.var(realizations)
-autocorrelation = acf(realizations)[k]
+autocorrelation = acf(realizations)[min(k,len(acf(realizations))-1)]
 autocovariance = acovf(realizations)[k]
 print("\nMean:_______{mean}\nDeviation:__{std}\nVariance:___{var}\n\nAutocovariance (gamma):__{autocov}\nAutocorrelation (rho):___{acf}\n".format(mean=mu, std=std, var=variance, autocov=autocovariance, acf=autocorrelation))
 
@@ -83,9 +96,9 @@ plots = ["time-series", "ACF", "PACF" ]
 plot_type = plots[plot_index]
 
 if plot_type == "ACF":
-    plot_acf(realizations, lags=lag)
+    plot_acf(realizations, lags=k)
 elif plot_type == "PACF":
-    plot_pacf(realizations, lags=lag)
+    plot_pacf(realizations, lags=k)
 elif plot_type == "time-series":
     plt.plot(realizations)
     plt.axhline(y=mu, linestyle='dotted')

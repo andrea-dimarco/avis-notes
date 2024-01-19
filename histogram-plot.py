@@ -1,3 +1,7 @@
+'''
+Plot the histogram.
+'''
+
 import matplotlib.pyplot as plt 
 
 
