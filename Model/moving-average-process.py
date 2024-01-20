@@ -1,5 +1,5 @@
 '''
-Compute the Auto-Regressive Process Variance, ACOVF and ACF.
+Compute the Moving Average Process Variance, ACOVF and ACF.
 '''
 
 
@@ -10,18 +10,18 @@ from statsmodels.tsa.stattools import acovf
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 
-
-phi = [0.5] # Model parameters
+# Write the MA model parameters down here
+theta = [-0.5]
 k = 1 # . . . . . . Lag for the printed results
 noise_mu = 0.0 #. . Mean of the random noise
 noise_var = 1.0 # . Variance of the white noise
-N = 100000 # . . . . Number of simulated samples if 0 the program will simply output the metrics
+N = 1000 # . . . . Number of simulated samples if 0 the program will simply output the metrics
 show_plot = False # . . . . If to display the plot
 save_picture = False #. . . If you want to save the pictures for the plot
 
 
-p = len(phi) #. . Dimension of the model
-phi = [1.0] + phi # DO NOT TOUCH THIS
+q = len(theta) #. . Dimension of the model
+theta = [1.0] + theta # DO NOT TOUCH THIS
 initial_state = 0.0 # . . . Initial state of the model
 realizations = [] # . . . . Model realizations
 plot_index = 0 #. . 0 = plot the realizations
@@ -29,51 +29,38 @@ plot_index = 0 #. . 0 = plot the realizations
 # . . . . . . . . . 2 = plot the PACF up to k
 
 
-def gamma_f(k):
-    global p
-    global phi
-    if k == 0:
-        global var
-        return var
-    else:
-        sum = 0
-        for i in range(1, p+1):
-            sum += phi[i]*gamma_f(k-i)
-        return sum
-
 def model():
     '''
     The model that will generate the time series.
     Supports up to three parameters.
     '''
     # load parameters
-    global phi
-    global p
-    if p >= 1:
-        phi1 = phi[1]
+    global theta
+
+    if q >= 1:
+        theta1 = theta[1]
     else:   
-        phi1 = 0.0
-    if p >= 2:
-        phi2 = phi[2]
+        theta1 = 0.0
+    if q >= 2:
+        theta2 = theta[2]
     else:
-        phi2 = 0.0
+        theta2 = 0.0
     
     # load past variables state
     global at
-    global Zt
-    global Zt_1
-    global Zt_2
+    global at_1
+    global at_2
 
     # update state
-    Zt_2 = Zt_1
-    Zt_1 = Zt
+    at_2 = at_1
+    at_1 = at
 
     # get noise
     at = np.random.normal(noise_mu, noise_var)
 
     # compute current state
     
-    Zt = at + phi1*Zt_1 + phi2*Zt_2
+    Zt = at + theta1*at_1 + theta2*at_2
 
     return Zt
 
@@ -87,9 +74,8 @@ def run_simulation(N):
         realizations.append(model())
 
 
-Zt   = initial_state
-Zt_1 = initial_state
-Zt_2 = initial_state
+at_1 = noise_mu
+at_2 = noise_mu
 at   = noise_mu
 
 if k < 0:
@@ -108,25 +94,17 @@ if N > 0:
     simulated_rho = acf(realizations)[k]
     print("Simulated results:\n Mean:____________________{mu}\n Variance:________________{var}\n Autocovariance (gamma):__{gamma}\n Autocorrelation (rho):___{rho}\n".format(var=simulated_var, mu=simulated_mu, gamma=simulated_gamma, rho=simulated_rho))
 
-
 var = 0
-if p == 1:
-    var = noise_var / (1 - phi[1]**2)
-elif p == 2:
-    var = ( (1-phi[2])*noise_var ) / ( (1+phi[2])*(1-phi[1]-phi[2])*(1+phi[1]-phi[2]) )
-else:
-    print("Not supported")
-    assert(False)
+for i in range(q+1):
+    var += theta[i]**2
+var *= noise_var
 
-gamma = gamma_f(k)
+gamma = 0.0
+for s in range(q-k+1):
+    gamma += theta[s]*theta[s+k]
+gamma *= noise_var
 
-if p == 1:
-    rho = phi[1]**k
-elif p == 2:
-    rho = gamma_f(k) / gamma_f(0)
-else:
-    print("p > 2 is not supported")
-    assert(False)
+rho = gamma / noise_var / var
 
 print("Computed results\n Variance:________________{var}\n Autocovariance (gamma):__{gamma}\n Autocorrelation (rho):___{rho}\n".format(var=var, gamma=gamma, rho=rho))
 

@@ -10,9 +10,9 @@ from statsmodels.tsa.stattools import acovf
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 
-
-phi = [0.3] # Model parameters
-theta = [-0.2]
+# Zt = phi[1]*Zt_1 + at + theta[1]*at_1
+phi = [] # <== AR parameters
+theta = [] # <== MA parameters
 k = 1 # . . . . . . Lag for the printed results
 noise_mu = 0.0 #. . Mean of the random noise
 noise_var = 1.0 # . Variance of the white noise

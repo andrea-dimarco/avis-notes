@@ -1,5 +1,5 @@
 %             Zt-3  Zt-2   Zt-1  Zt=1
-polynomial = [+0.0, +0.81, -1.8, 1.0];
+polynomial = [+0.0, +0.3, -1.1, 1.0];
 inverse_roots = roots(polynomial);
 r = arrayfun(@(x) 1/x, inverse_roots);
 r
