@@ -16,13 +16,13 @@ k = 1 # . . . . . . Lag for the printed results
 noise_mu = 0.0 #. . Mean of the random noise
 noise_var = 1.0 # . Variance of the white noise
 N = 100000 # . . . . Number of simulated samples if 0 the program will simply output the metrics
+show_plot = False # . . . . If to display the plot
+save_picture = False #. . . If you want to save the pictures for the plot
 
 
 p = len(phi) #. . Dimension of the model
 phi = [1.0] + phi # DO NOT TOUCH THIS
 initial_state = 0.0 # . . . Initial state of the model
-show_plot = False # . . . . If to display the plot
-save_picture = False #. . . If you want to save the pictures for the plot
 realizations = [] # . . . . Model realizations
 plot_index = 0 #. . 0 = plot the realizations
 # . . . . . . . . . 1 = plot the ACF up to k
