@@ -16,8 +16,8 @@ theta = [] # <== MA parameters
 k = 1 # . . . . . . Lag for the printed results
 noise_mu = 0.0 #. . Mean of the random noise
 noise_var = 1.0 # . Variance of the white noise
-N = 100 # . . . . Number of simulated samples if 0 the program will simply output the metrics
-show_plot = True # . . . . If to display the plot
+N = 10000 # . . . . Number of simulated samples if 0 the program will simply output the metrics
+show_plot = False # . . . . If to display the plot
 save_picture = False #. . . If you want to save the pictures for the plot
 
 
@@ -40,7 +40,7 @@ def gamma_f(k):
         global var
         return var
     if k == 1:
-        return ( (phi[1] + theta[1])*(1 + phi[1]*theta[1]) ) / (1 - phi[1]**2) * noise_var
+        return phi[1]*gamma_f(0) + theta[1]*noise_var 
     else:
         return phi[1]*gamma_f(k-1)
 
@@ -127,7 +127,7 @@ if N > 0:
 
 var = 0
 if p == 1 and q == 1:
-    var = ( 1 + theta[1]**2 + 2*phi[1]*theta[1]) / (1 - phi[1]**2) * noise_var
+    var = ( 1 + theta[1]**2 + 2*phi[1]*theta[1] ) / (1 - phi[1]**2) * noise_var
 else:
     print("Not supported")
     assert(False)

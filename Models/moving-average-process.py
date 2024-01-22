@@ -11,7 +11,7 @@ from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 
 # Write the MA model parameters down here
-theta = [-0.5]
+theta = []
 k = 1 # . . . . . . Lag for the printed results
 noise_mu = 0.0 #. . Mean of the random noise
 noise_var = 1.0 # . Variance of the white noise

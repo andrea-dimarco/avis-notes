@@ -10,7 +10,8 @@ as_string = ""
 # or write them manually
 history = []
 # if you want to save the picture
-save_plot = False
+model_index = 2
+save_plot = True
 
 assert((as_string != "") or (len(history) > 0))
 
@@ -20,5 +21,5 @@ if as_string != "":
 if len(history) > 0:
     plt.stem(history)  
     if save_plot:
-        plt.savefig("histogram.png")
+        plt.savefig("model-{i}.png".format(i=model_index))
     plt.show()

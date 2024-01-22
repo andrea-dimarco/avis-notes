@@ -11,8 +11,8 @@ from statsmodels.graphics.tsaplots import plot_pacf
 
 
 #  if empty it will simulate the model expressed in the parameters below
-realizations = [] # <== copy the realizations here
-k = -1   # . . . . . . . . . Lag for the ATF and PACF functions
+realizations = [0.38, 0.64, -0.91, -0.74, -0.34, -0.36, 1.00, 0.51, 0.52, -0.91, -0.29, -0.87, 0.64, 0.98, -0.74] # <== copy the realizations here
+k = 1   # . . . . . . . . . Lag for the ATF and PACF functions
 
 N = 100 # . . . . . . . . . Number of simulated samples
 initial_state = 0.0 # . . . Initial state of the model
