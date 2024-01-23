@@ -104,7 +104,7 @@ for s in range(q-k+1):
     gamma += theta[s]*theta[s+k]
 gamma *= noise_var
 
-rho = gamma / noise_var / var
+rho = gamma / var
 
 print("Computed results\n Variance:________________{var}\n Autocovariance (gamma):__{gamma}\n Autocorrelation (rho):___{rho}\n".format(var=var, gamma=gamma, rho=rho))
 
