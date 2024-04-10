@@ -17,6 +17,6 @@ The course project's repository is [here](https://github.com/andrea-dimarco/high
 
 - [ARMA Process](./Models/arma-process.py): Python cript that given the parameters for an ARMA(1,1) model and returns, simulates it and returns both the statistics computed over the simulation and with the formulas.
 
-- [AR Process](./Models/moving-average-process.py): Python cript that given the parameters for an AR(1) or AR(2) model returns, simulates it and returns both the statistics computed over the simulation and with the formulas.
+- [MA Process](./Models/moving-average-process.py): Python cript that given the parameters for an MA(1) or MA(2) model returns, simulates it and returns both the statistics computed over the simulation and with the formulas.
 
-- [AR Process](./Models/auto-regressive-process.py): Python cript that given the parameters for an MA(q) or model returns, simulates it (only with q up to 2) and returns both the statistics computed over the simulation and with the formulas.
+- [AR Process](./Models/auto-regressive-process.py): Python cript that given the parameters for an AR(p) model, simulates it (only with q up to 2) and returns both the statistics computed over the simulation and with the formulas.
